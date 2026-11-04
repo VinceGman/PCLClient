@@ -41,7 +41,8 @@
       {
         "provider": "github",
         "owner": "VinceGman",
-        "repo": "PCLClient"
+        "repo": "PCLClient",
+        "releaseType": "release"
       }
     ]
   }
