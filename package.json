@@ -1,6 +1,6 @@
 {
   "name": "pclclient",
-  "version": "1.0.14",
+  "version": "1.0.15",
   "description": "It's a client for the card game PCL.",
   "homepage": "https://github.com/VinceGman/PCLClient#readme",
   "bugs": {
