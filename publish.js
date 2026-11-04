@@ -14,7 +14,7 @@ const env = {
 };
 
 execSync("git push origin HEAD", { stdio: "inherit", env });
-execSync("git push origin --tags", { stdio: "inherit", env });
+execSync('git push origin v' + require('./package.json').version, { stdio: 'inherit', env });
 
 execSync("node ./node_modules/electron-builder/cli.js --win --publish always", {
   stdio: "inherit",
