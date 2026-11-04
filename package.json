@@ -17,7 +17,7 @@
   "scripts": {
     "start": "electron .",
     "build": "electron-builder --win",
-    "publish": "npm version patch && node -r dotenv/config ./node_modules/electron-builder/cli.js --win --publish always"
+    "publish": "npm version patch && git push origin HEAD && git push origin --tags && node -r dotenv/config ./node_modules/electron-builder/cli.js --win --publish always"
   },
   "dependencies": {
     "dotenv": "^18.0.9",
