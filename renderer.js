@@ -21,6 +21,8 @@ window.electronAPI.onUpdateStatus((status) => {
 });
 
 window.electronAPI.onUpdateProgress((percent) => {
+  console.log("Received progress:", percent);
+
   document.getElementById("update-progress").textContent = `${percent}%`;
 });
 

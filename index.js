@@ -45,6 +45,8 @@ function createWindow() {
   });
 
   autoUpdater.on("download-progress", (progress) => {
+    console.log("Download:", progress.percent);
+
     win.webContents.send("update-progress", Math.round(progress.percent));
   });
 
