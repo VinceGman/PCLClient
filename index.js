@@ -2,7 +2,7 @@ const { app, BrowserWindow, ipcMain } = require("electron");
 const { autoUpdater } = require("electron-updater");
 
 autoUpdater.autoDownload = true;
-autoUpdater.autoInstallOnAppQuit = true;
+autoUpdater.autoInstallOnAppQuit = false;
 
 autoUpdater.on("checking-for-update", () => {
   console.log("Checking for updates...");
@@ -22,6 +22,8 @@ autoUpdater.on("download-progress", (progress) => {
 
 autoUpdater.on("update-downloaded", (info) => {
   console.log("Update downloaded:", info.version);
+
+  autoUpdater.quitAndInstall(true, true);
 });
 
 autoUpdater.on("error", (error) => {
@@ -62,16 +64,12 @@ ipcMain.on("quit-app", () => {
   app.quit();
 });
 
-ipcMain.on('check-for-updates', () => {
-    autoUpdater.checkForUpdates();
+ipcMain.on("check-for-updates", () => {
+  autoUpdater.checkForUpdates();
 });
 
-ipcMain.on('download-update', () => {
-    autoUpdater.downloadUpdate();
-});
-
-ipcMain.on('install-update', () => {
-    autoUpdater.quitAndInstall();
+ipcMain.on("download-update", () => {
+  autoUpdater.downloadUpdate();
 });
 
 ipcMain.handle("get-app-version", () => app.getVersion());
