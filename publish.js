@@ -124,7 +124,7 @@ async function publish() {
     }
 
     // Identify only the files needed for installation and updates.
-    const installer = `PCL Client.exe`;
+    const installer = `PCL.exe`;
 
     const assets = fs.readdirSync(dist).filter(file =>
         file === installer ||
