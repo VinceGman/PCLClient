@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Electron App</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <body>
+
+    <!-- Updater Scene -->
+    <div id="updater" class="scene active">
+        <h1>Update</h1>
+    </div>
+
+    <!-- Home Scene -->
+    <div id="home" class="scene">
+        <h1>Home</h1>
+        <button onclick="switchScene('play')">Play</button>
+        <button onclick="switchScene('deckbuilder')">Deckbuilder</button>
+    </div>
+
+    <!-- Deckbuilder Scene -->
+    <div id="deckbuilder" class="scene">
+        <h1>Deckbuilder</h1>
+        <button onclick="switchScene('play')">Play</button>
+    </div>
+
+    <!-- Play Scene -->
+    <div id="play" class="scene">
+        <h1>Play</h1>
+        <button onclick="switchScene('deckbuilder')">Deckbuilder</button>
+    </div>
+
+    <!-- Settings Menu -->
+    <div id="settings-menu">
+        <button onclick="window.electronAPI.toggleFullscreen()">
+            Toggle Fullscreen
+        </button>
+        <button onclick="window.electronAPI.quitApp()">
+            Exit
+        </button>
+    </div>
+
+    <script src="renderer.js"></script>
+
+</body>
+</body>
+</html>

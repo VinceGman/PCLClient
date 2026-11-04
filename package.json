@@ -1,0 +1,48 @@
+{
+  "name": "pclclient",
+  "version": "1.0.1",
+  "description": "It's a client for the card game PCL.",
+  "homepage": "https://github.com/VinceGman/PCLClient#readme",
+  "bugs": {
+    "url": "https://github.com/VinceGman/PCLClient/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VinceGman/PCLClient.git"
+  },
+  "license": "MIT",
+  "author": "Vicente Gonzalez",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder --win",
+    "publish": "npm version patch && node -r dotenv/config ./node_modules/electron-builder/cli.js --win --publish always"
+  },
+  "dependencies": {
+    "dotenv": "^18.0.9",
+    "electron-updater": "^6.8.11"
+  },
+  "devDependencies": {
+    "electron": "^45.2.2",
+    "electron-builder": "^26.18.0"
+  },
+  "build": {
+    "appId": "com.pcl.client",
+    "productName": "PCL Client",
+    "win": {
+      "target": "nsis"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "VinceGman",
+        "repo": "PCLClient"
+      }
+    ]
+  }
+}
