@@ -1,4 +1,3 @@
-
 const { execSync } = require('child_process');
 const https = require('https');
 const fs = require('fs');
@@ -39,9 +38,12 @@ function request(hostname, apiPath, method = 'GET', body = null, contentType = '
             }
         }, res => {
             let data = '';
+
             res.on('data', chunk => data += chunk);
+
             res.on('end', () => {
                 let result = {};
+
                 try {
                     result = data ? JSON.parse(data) : {};
                 } catch {}
@@ -53,23 +55,43 @@ function request(hostname, apiPath, method = 'GET', body = null, contentType = '
         req.on('error', reject);
 
         if (body) req.write(body);
+
         req.end();
     });
 }
 
 async function publish() {
+    const dist = path.join(__dirname, 'dist');
+
+    // Clean previous builds.
+    fs.rmSync(dist, { recursive: true, force: true });
+    fs.mkdirSync(dist, { recursive: true });
+
+    console.log('Cleaned dist directory.');
+
     // Push commit and version tag.
-    execSync('git push origin HEAD', { stdio: 'inherit', env });
-    execSync(`git push origin ${tag}`, { stdio: 'inherit', env });
+    execSync('git push origin HEAD', {
+        stdio: 'inherit',
+        env
+    });
+
+    execSync(`git push origin ${tag}`, {
+        stdio: 'inherit',
+        env
+    });
 
     // Build without Electron Builder publishing.
     execSync(
         'node ./node_modules/electron-builder/cli.js --win --publish never',
-        { stdio: 'inherit', env }
+        {
+            stdio: 'inherit',
+            env
+        }
     );
 
     // Find existing release.
     const releasePath = `/repos/${owner}/${repo}/releases/tags/${tag}`;
+
     let result = await request('api.github.com', releasePath);
 
     let release;
@@ -101,49 +123,56 @@ async function publish() {
         throw new Error(`GitHub API error: ${JSON.stringify(result.data)}`);
     }
 
-    // Upload missing build assets.
-    const dist = path.join(__dirname, 'dist');
+    // Identify only the files needed for installation and updates.
+    const installer = `PCL-Client-Setup-${version}.exe`;
 
-    if (fs.existsSync(dist)) {
-        for (const file of fs.readdirSync(dist)) {
-            if (/^PCL-Client-Setup-.*\.(exe|blockmap)$/i.test(file)) {
-                fs.unlinkSync(path.join(dist, file));
-                console.log(`Deleted old build: ${file}`);
-            }
-        }
+    const assets = fs.readdirSync(dist).filter(file =>
+        file === installer ||
+        file === `${installer}.blockmap` ||
+        file === 'latest.yml'
+    );
+
+    if (!assets.includes(installer)) {
+        throw new Error('Installer EXE was not generated.');
     }
 
-    const assets = fs.readdirSync(dist)
-        .filter(file =>
-            file === `PCL-Client-Setup-${version}.exe` ||
-            file === `PCL-Client-Setup-${version}.exe.blockmap` ||
-            file === 'latest.yml'
+    if (!assets.includes('latest.yml')) {
+        throw new Error('latest.yml was not generated.');
+    }
+
+    // Delete all previous installer and updater assets.
+    const oldAssets = release.assets.filter(asset =>
+        /^PCL-Client-Setup-.*\.exe(\.blockmap)?$/i.test(asset.name) ||
+        asset.name === 'latest.yml'
+    );
+
+    for (const asset of oldAssets) {
+        const deleted = await request(
+            'api.github.com',
+            `/repos/${owner}/${repo}/releases/assets/${asset.id}`,
+            'DELETE'
         );
 
-    for (const file of assets) {
-        const existing = release.assets.some(asset => asset.name === file);
-
-        if (existing) {
-            console.log(`Already uploaded: ${file}`);
-            continue;
+        if (deleted.status !== 204) {
+            throw new Error(`Failed to delete ${asset.name}: ${JSON.stringify(deleted.data)}`);
         }
 
-        const filePath = path.join(dist, file);
-        const buffer = fs.readFileSync(filePath);
+        console.log(`Deleted old asset: ${asset.name}`);
+    }
+
+    // Upload only the current installer and updater files.
+    for (const file of assets) {
+        const buffer = fs.readFileSync(path.join(dist, file));
 
         const uploadPath =
             `/repos/${owner}/${repo}/releases/${release.id}/assets?name=${encodeURIComponent(file)}`;
-
-        const contentType = file.endsWith('.exe')
-            ? 'application/octet-stream'
-            : 'application/octet-stream';
 
         const uploaded = await request(
             'uploads.github.com',
             uploadPath,
             'POST',
             buffer,
-            contentType
+            'application/octet-stream'
         );
 
         if (uploaded.status !== 201) {
