@@ -140,31 +140,6 @@ async function publish() {
         throw new Error('latest.yml was not generated.');
     }
 
-    // Keep only assets required by Electron Updater.
-    // const requiredAssets = [
-    //     'PCL Client.exe',
-    //     'PCL Client.exe.blockmap',
-    //     'latest.yml'
-    // ];
-
-    // const oldAssets = release.assets.filter(
-    //     asset => !requiredAssets.includes(asset.name)
-    // );
-
-    // for (const asset of oldAssets) {
-    //     const deleted = await request(
-    //         'api.github.com',
-    //         `/repos/${owner}/${repo}/releases/assets/${asset.id}`,
-    //         'DELETE'
-    //     );
-
-    //     if (deleted.status !== 204) {
-    //         throw new Error(`Failed to delete ${asset.name}`);
-    //     }
-
-    //     console.log(`Deleted unnecessary asset: ${asset.name}`);
-    // }
-
     // Upload only the current installer and updater files.
     for (const file of assets) {
         const buffer = fs.readFileSync(path.join(dist, file));
