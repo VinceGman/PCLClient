@@ -17,7 +17,7 @@
   "scripts": {
     "start": "electron .",
     "build": "electron-builder --win",
-    "publish": "npm version patch && git -c http.extraheader=\"AUTHORIZATION: basic $(node -e \"process.stdout.write(Buffer.from('x-access-token:'+require('dotenv').config().parsed.GH_TOKEN).toString('base64'))\")\" push origin HEAD && git -c http.extraheader=\"AUTHORIZATION: basic $(node -e \"process.stdout.write(Buffer.from('x-access-token:'+require('dotenv').config().parsed.GH_TOKEN).toString('base64'))\")\" push origin --tags && node -r dotenv/config ./node_modules/electron-builder/cli.js --win --publish always"
+    "publish": "npm version patch && node -r dotenv/config scripts/publish.js"
   },
   "dependencies": {
     "dotenv": "^18.0.9",
