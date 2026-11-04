@@ -74,6 +74,8 @@ ipcMain.on('install-update', () => {
     autoUpdater.quitAndInstall();
 });
 
+ipcMain.handle("get-app-version", () => app.getVersion());
+
 app.whenReady().then(() => {
   createWindow();
   autoUpdater.checkForUpdates();

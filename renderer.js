@@ -11,3 +11,7 @@ function switchScene(sceneName) {
 
     document.getElementById(sceneName).classList.add('active');
 }
+
+window.electronAPI.getAppVersion().then(version => {
+    document.getElementById("current-version").textContent = `Version ${version}`;
+});
