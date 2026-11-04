@@ -1,35 +1,6 @@
 const { app, BrowserWindow, ipcMain } = require("electron");
 const { autoUpdater } = require("electron-updater");
 
-autoUpdater.autoDownload = true;
-autoUpdater.autoInstallOnAppQuit = false;
-
-autoUpdater.on("checking-for-update", () => {
-  console.log("Checking for updates...");
-});
-
-autoUpdater.on("update-available", (info) => {
-  console.log("Update available:", info.version);
-});
-
-autoUpdater.on("update-not-available", () => {
-  console.log("PCLClient is up to date.");
-});
-
-autoUpdater.on("download-progress", (progress) => {
-  console.log(`Downloading update: ${Math.round(progress.percent)}%`);
-});
-
-autoUpdater.on("update-downloaded", (info) => {
-  console.log("Update downloaded:", info.version);
-
-  autoUpdater.quitAndInstall(true, true);
-});
-
-autoUpdater.on("error", (error) => {
-  console.error("Updater error:", error);
-});
-
 const fs = require("fs");
 const path = require("path");
 
@@ -41,8 +12,8 @@ if (!fs.existsSync(dataDirectory)) {
 
 function createWindow() {
   const win = new BrowserWindow({
-    width: 1200,
-    height: 800,
+    width: 1920,
+    height: 1080,
     fullscreen: true,
     autoHideMenuBar: true,
     webPreferences: {
@@ -50,6 +21,35 @@ function createWindow() {
       nodeIntegration: false,
       contextIsolation: true,
     },
+  });
+
+  autoUpdater.autoDownload = true;
+  autoUpdater.autoInstallOnAppQuit = false;
+
+  autoUpdater.on("checking-for-update", () => {
+    win.webContents.send("update-status", "Checking for updates...");
+  });
+
+  autoUpdater.on("update-available", () => {
+    win.webContents.send("update-status", "Downloading update...");
+  });
+
+  autoUpdater.on("update-downloaded", () => {
+    win.webContents.send("update-status", "Installing update...");
+
+	autoUpdater.quitAndInstall(true, true);
+  });
+
+  autoUpdater.on("update-not-available", () => {
+    console.log("PCL is up to date.");
+  });
+
+  autoUpdater.on("download-progress", (progress) => {
+    win.webContents.send("update-progress", Math.round(progress.percent));
+  });
+
+  autoUpdater.on("error", (error) => {
+    console.error("Updater error:", error);
   });
 
   win.loadFile("index.html");
@@ -73,6 +73,8 @@ ipcMain.on("download-update", () => {
 });
 
 ipcMain.handle("get-app-version", () => app.getVersion());
+
+// win.webContents.send("transfer-data", data);
 
 app.whenReady().then(() => {
   createWindow();

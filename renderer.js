@@ -15,3 +15,11 @@ function switchScene(sceneName) {
 window.electronAPI.getAppVersion().then(version => {
     document.getElementById("current-version").textContent = `Version ${version}`;
 });
+
+electron.onUpdateStatus((status) => {
+    document.getElementById("update-status").textContent = status;
+});
+
+electron.onUpdateProgress((percent) => {
+    document.getElementById("update-progress").textContent = `${percent}%`;
+});
