@@ -104,21 +104,20 @@ async function publish() {
     // Upload missing build assets.
     const dist = path.join(__dirname, 'dist');
 
-    // Delete old versioned installers and blockmaps from dist.
-    for (const file of fs.readdirSync(dist)) {
-        if (
-            /PCL-Client-Setup-.*\.(exe|blockmap)$/i.test(file) &&
-            file !== `PCL-Client-Setup-${version}.exe` &&
-            file !== `PCL-Client-Setup-${version}.exe.blockmap`
-        ) {
-            fs.unlinkSync(path.join(dist, file));
-            console.log(`Deleted old build: ${file}`);
+    if (fs.existsSync(dist)) {
+        for (const file of fs.readdirSync(dist)) {
+            if (/^PCL-Client-Setup-.*\.(exe|blockmap)$/i.test(file)) {
+                fs.unlinkSync(path.join(dist, file));
+                console.log(`Deleted old build: ${file}`);
+            }
         }
     }
 
     const assets = fs.readdirSync(dist)
         .filter(file =>
-            /\.(exe|blockmap|yml)$/i.test(file)
+            file === `PCL-Client-Setup-${version}.exe` ||
+            file === `PCL-Client-Setup-${version}.exe.blockmap` ||
+            file === 'latest.yml'
         );
 
     for (const file of assets) {
