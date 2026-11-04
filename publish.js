@@ -140,10 +140,15 @@ async function publish() {
         throw new Error('latest.yml was not generated.');
     }
 
-    // Delete all previous installer and updater assets.
-    const oldAssets = release.assets.filter(asset =>
-        /^PCL Client-Setup-.*\.exe(\.blockmap)?$/i.test(asset.name) ||
-        asset.name === 'latest.yml'
+    // Keep only assets required by Electron Updater.
+    const requiredAssets = [
+        'PCL Client.exe',
+        'PCL Client.exe.blockmap',
+        'latest.yml'
+    ];
+
+    const oldAssets = release.assets.filter(
+        asset => !requiredAssets.includes(asset.name)
     );
 
     for (const asset of oldAssets) {
@@ -154,10 +159,10 @@ async function publish() {
         );
 
         if (deleted.status !== 204) {
-            throw new Error(`Failed to delete ${asset.name}: ${JSON.stringify(deleted.data)}`);
+            throw new Error(`Failed to delete ${asset.name}`);
         }
 
-        console.log(`Deleted old asset: ${asset.name}`);
+        console.log(`Deleted unnecessary asset: ${asset.name}`);
     }
 
     // Upload only the current installer and updater files.
