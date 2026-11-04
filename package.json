@@ -28,9 +28,9 @@
     "electron-builder": "^26.18.0"
   },
   "build": {
-    "artifactName": "${productName}-Setup-${version}.${ext}",
+    "artifactName": "${productName}.${ext}",
     "appId": "com.pcl.client",
-    "productName": "PCL-Client",
+    "productName": "PCL Client",
     "win": {
       "target": "nsis"
     },

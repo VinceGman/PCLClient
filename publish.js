@@ -124,7 +124,7 @@ async function publish() {
     }
 
     // Identify only the files needed for installation and updates.
-    const installer = `PCL-Client-Setup-${version}.exe`;
+    const installer = `PCL Client.exe`;
 
     const assets = fs.readdirSync(dist).filter(file =>
         file === installer ||
@@ -142,7 +142,7 @@ async function publish() {
 
     // Delete all previous installer and updater assets.
     const oldAssets = release.assets.filter(asset =>
-        /^PCL-Client-Setup-.*\.exe(\.blockmap)?$/i.test(asset.name) ||
+        /^PCL Client-Setup-.*\.exe(\.blockmap)?$/i.test(asset.name) ||
         asset.name === 'latest.yml'
     );
 
