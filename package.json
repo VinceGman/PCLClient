@@ -30,7 +30,7 @@
   "build": {
     "artifactName": "${productName}-Setup-${version}.${ext}",
     "appId": "com.pcl.client",
-    "productName": "PCL Client",
+    "productName": "PCL-Client",
     "win": {
       "target": "nsis"
     },
