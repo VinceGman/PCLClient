@@ -37,11 +37,11 @@ function createWindow() {
   autoUpdater.on("update-downloaded", () => {
     win.webContents.send("update-status", "Installing update...");
 
-	autoUpdater.quitAndInstall(true, true);
+    autoUpdater.quitAndInstall(true, true);
   });
 
   autoUpdater.on("update-not-available", () => {
-    console.log("PCL is up to date.");
+    win.webContents.send("update-status", "up-to-date");
   });
 
   autoUpdater.on("download-progress", (progress) => {
