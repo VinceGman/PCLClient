@@ -17,7 +17,7 @@ function createWindow() {
     fullscreen: true,
     autoHideMenuBar: true,
     webPreferences: {
-      preload: __dirname + "/preload.js",
+      preload: __dirname + "/helpers/preload.js",
       nodeIntegration: false,
       contextIsolation: true,
     },
@@ -54,7 +54,7 @@ function createWindow() {
     console.error("Updater error:", error);
   });
 
-  win.loadFile("index.html");
+  win.loadFile("/views/index.html");
 }
 
 ipcMain.on("toggle-fullscreen", (event) => {
