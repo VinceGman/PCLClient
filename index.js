@@ -27,6 +27,7 @@ function createWindow() {
   autoUpdater.autoInstallOnAppQuit = false;
 
   autoUpdater.on("checking-for-update", () => {
+    console.log(app.isPackaged, "1");
     win.webContents.send("update-status", "Checking for updates...");
   });
 
@@ -67,6 +68,7 @@ ipcMain.on("quit-app", () => {
 });
 
 ipcMain.on("check-for-updates", () => {
+  console.log(app.isPackaged, "2");
   autoUpdater.checkForUpdates();
 });
 
@@ -75,8 +77,6 @@ ipcMain.on("download-update", () => {
 });
 
 ipcMain.handle("get-app-version", () => app.getVersion());
-
-// win.webContents.send("transfer-data", data);
 
 app.whenReady().then(() => {
   createWindow();
