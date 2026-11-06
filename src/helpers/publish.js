@@ -61,7 +61,7 @@ function request(hostname, apiPath, method = 'GET', body = null, contentType = '
 }
 
 async function publish() {
-    const dist = path.join(__dirname, 'dist');
+    const dist = path.join(__dirname, '../../dist');
 
     // Clean previous builds.
     fs.rmSync(dist, { recursive: true, force: true });
