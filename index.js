@@ -17,7 +17,7 @@ function createWindow() {
     fullscreen: true,
     autoHideMenuBar: true,
     webPreferences: {
-      preload: __dirname, "src/helpers/preload.js",
+      preload: path.join(__dirname, "src/helpers/preload.js"),
       nodeIntegration: false,
       contextIsolation: true,
     },
