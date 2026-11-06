@@ -9,7 +9,7 @@ const repo = 'PCLClient';
 
 if (!token) throw new Error('GH_TOKEN missing from .env');
 
-const version = require('./package.json').version;
+const version = require('../../package.json').version;
 const tag = `v${version}`;
 
 const auth = Buffer.from(`x-access-token:${token}`).toString('base64');
