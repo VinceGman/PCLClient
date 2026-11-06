@@ -17,7 +17,7 @@
   "scripts": {
     "start": "electron .",
     "build": "electron-builder --win",
-    "publish": "npm version patch && node -r dotenv/config /src/helpers/publish.js"
+    "publish": "npm version patch && node -r dotenv/config src/helpers/publish.js"
   },
   "dependencies": {
     "dotenv": "^18.0.9",
